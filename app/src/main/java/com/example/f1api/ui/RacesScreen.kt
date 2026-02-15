@@ -33,11 +33,21 @@ fun RacesScreen(viewModel: RacesViewModel = viewModel()) {
                     items(races) { race ->
                         Card(modifier = Modifier.fillMaxWidth()) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text("Season: ${race.season}", style = MaterialTheme.typography.titleMedium)
-                                Text("Round: ${race.round}")
-                                Text("Circuit: ${race.circuit ?: "Unknown"}")
-                                Text("Date: ${race.date ?: "Unknown"}")
-                                Text("Winner: ${race.winner ?: "Unknown"}")
+                                Text(
+                                    text = race.raceName ?: "Unknown",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+
+                                Text("Round: ${race.round ?: "-"}")
+
+                                Text(
+                                    text = "Circuit: ${race.circuit?.circuitName ?: "Unknown"}"
+                                )
+
+                                Text(
+                                    text = "Winner: ${race.winner?.name ?: ""} ${race.winner?.surname ?: ""}"
+                                )
+
                             }
                         }
                     }

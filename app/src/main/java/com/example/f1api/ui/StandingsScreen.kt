@@ -14,41 +14,48 @@ import com.example.f1api.util.UiState
 import com.example.f1api.viewmodel.StandingsViewModel
 
 @Composable
-fun StandingsScreen(viewModel: StandingsViewModel = viewModel()) {
-
+fun StandingsScreen(year: Int, viewModel: StandingsViewModel = viewModel()) {
     val standingsState by viewModel.standingsState.collectAsState()
 
-    LaunchedEffect(Unit) { viewModel.loadStandings() }
+    LaunchedEffect(Unit) { viewModel.loadDriversChampionship(year) }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         when (standingsState) {
-
-            is UiState.Loading ->
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-
+            is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             is UiState.Success -> {
                 val standings = (standingsState as UiState.Success<List<Standing>>).data
 
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                     items(standings) { standing ->
-                        Card(modifier = Modifier.fillMaxWidth()) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text("${standing.position}. ${standing.driver ?: "Unknown"}",
-                                    style = MaterialTheme.typography.titleMedium)
-                                Text("Team: ${standing.team ?: "Unknown"}")
-                                Text("Points: ${standing.points ?: 0f}")
+                                Text(
+                                    text = "${standing.position ?: "-"} - ${standing.driver?.name ?: "Unknown"} ${standing.driver?.surname ?: ""}",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Team: ${standing.team?.teamName ?: "Unknown"}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = "Points: ${standing.points ?: 0f}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
                             }
                         }
                     }
                 }
             }
-
-            is UiState.Error ->
-                Text(
-                    text = (standingsState as UiState.Error).message,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+            is UiState.Error -> Text(
+                text = (standingsState as UiState.Error).message,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }

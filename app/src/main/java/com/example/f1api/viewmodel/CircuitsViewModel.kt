@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CircuitsViewModel(private val repo: F1Repository) : ViewModel() {
+class CircuitsViewModel(private val repo: F1Repository = F1Repository()) : ViewModel() {
     private val _circuitsState = MutableStateFlow<UiState<List<Circuit>>>(UiState.Loading)
     val circuitsState: StateFlow<UiState<List<Circuit>>> = _circuitsState
 

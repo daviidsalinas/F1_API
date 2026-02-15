@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class RacesViewModel(private val repo: F1Repository) : ViewModel() {
+class RacesViewModel(private val repo: F1Repository = F1Repository()) : ViewModel() {
     private val _racesState = MutableStateFlow<UiState<List<Race>>>(UiState.Loading)
     val racesState: StateFlow<UiState<List<Race>>> = _racesState
 

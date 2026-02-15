@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class TeamsViewModel(private val repo: F1Repository) : ViewModel() {
+class TeamsViewModel(private val repo: F1Repository = F1Repository()) : ViewModel() {
     private val _teamsState = MutableStateFlow<UiState<List<Team>>>(UiState.Loading)
     val teamsState: StateFlow<UiState<List<Team>>> = _teamsState
 

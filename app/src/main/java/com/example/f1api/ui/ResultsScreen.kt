@@ -17,31 +17,36 @@ import com.example.f1api.viewmodel.ResultsViewModel
 fun ResultsScreen(year: Int, round: Int, viewModel: ResultsViewModel = viewModel()) {
     val resultsState by viewModel.resultsState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadResults(year, round)
-    }
+    LaunchedEffect(Unit) { viewModel.loadResults(year, round) }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         when (resultsState) {
             is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            is UiState.Success -> LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items((resultsState as UiState.Success<List<Result>>).data) { result ->
-                    Card(modifier = Modifier.fillMaxWidth()) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = result.winner ?: "Unknown",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = "Team: ${result.team ?: "Unknown"}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = "Laps: ${result.laps ?: "-"}  Time: ${result.time ?: "-"}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+            is UiState.Success -> {
+                val results = (resultsState as UiState.Success<List<Result>>).data
+
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    items(results) { result ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = "${result.winner?.name ?: "Unknown"} ${result.winner?.surname ?: ""}",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Team: ${result.team?.name ?: "Unknown"}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = "Laps: ${result.laps ?: "-"}  Time: ${result.time ?: "-"}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
                     }
                 }
@@ -54,3 +59,4 @@ fun ResultsScreen(year: Int, round: Int, viewModel: ResultsViewModel = viewModel
         }
     }
 }
+
